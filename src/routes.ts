@@ -1,8 +1,23 @@
-import { Router } from "express";
-import { AuthenticateUserController } from "./controllers/AuthenticateUserControllers";
+import { Router } from 'express'
+import { AuthenticateUserController } from './controllers/AuthenticateUserControllers'
+import { CreateMessageController } from './controllers/CreateMessageController'
+import { GetLast3MessagesController } from './controllers/GetLast3MessagesController'
+import { ProfileUserController } from './controllers/ProfileUserController'
+import { ensureAuthenticate } from './middleware/ensureAuthenticated'
+import { ProfileUserService } from './services/ProfileUserService'
 
 const router = Router()
 
 router.post('/authenticate', new AuthenticateUserController().handle)
 
-export {router}
+router.post(
+  '/messages',
+  ensureAuthenticate,
+  new CreateMessageController().handle
+)
+
+router.get('/messages/last3', new GetLast3MessagesController().handle)
+
+router.get('/profile', ensureAuthenticate, new ProfileUserController().handle)
+
+export { router }
